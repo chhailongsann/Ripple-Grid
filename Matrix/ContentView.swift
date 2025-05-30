@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     var body: some View {
-        RippleMetricView(numberOfColumns: 20, spacing: 4)
+        RippleMetricView(numberOfColumns: 13, spacing: 10)
             .ignoresSafeArea()
     }
 }

@@ -40,6 +40,10 @@ public struct RippleMetricView: View {
     let spacing: CGFloat
     
     
+    let emojis: [String] = [
+        "😋", "🥶", "🥑", "♥️", "🧠"
+    ]
+
     @State private var trigger: Int = 0
     @State private var waveOrigin: CGPoint = .zero
     
@@ -72,8 +76,10 @@ public struct RippleMetricView: View {
                             let originDistanceNormalize = originDistance / MAX_GRID_DISTANCE
                             let waveImpact = pow(1.0 - originDistanceNormalize, 0)
                             
-                            RoundedRectangle(cornerRadius: 0)
-                                .fill(Color.blue)
+                            Text("♥️")
+//                            Image(systemName: "square.and.arrow.up")
+//                            Circle()
+//                                .fill(Color.blue)
                                 .frame(width: abs(itemSize), height: abs(itemSize))
                                 .phaseAnimator(
                                     CellAnimationPhase.allCases,
