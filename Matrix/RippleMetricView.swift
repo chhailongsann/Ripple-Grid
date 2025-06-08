@@ -37,6 +37,7 @@ fileprivate enum CellAnimationPhase: CaseIterable {
 public struct RippleMetricView: View {
     
     let numberOfColumns: Int
+    let numberOfRows: Int
     let spacing: CGFloat
     
     
@@ -47,22 +48,25 @@ public struct RippleMetricView: View {
     @State private var trigger: Int = 0
     @State private var waveOrigin: CGPoint = .zero
     
+    @State private var height: CGFloat = 0
+    
     public var body: some View {
         GeometryReader {
             let size = $0.size
             let totalSpacing = CGFloat(numberOfColumns - 1) * spacing
             let itemSize = (size.width - totalSpacing) / CGFloat(numberOfColumns)
-            let numberOfRows = (size.height + spacing) / (itemSize + spacing)
+//            let numberOfRows = (size.height + spacing) / (itemSize + spacing)
             
             let MAX_GRID_DISTANCE = calculateDistance(
                 point1: .init(x: 0, y: 0),
                 point2: .init(x: numberOfColumns - 1, y: Int(numberOfRows - 1))
             )
 
+            let totalHeight = itemSize * CGFloat(numberOfRows) + spacing * CGFloat(numberOfRows - 1)
             
             
             VStack(spacing: spacing) {
-                ForEach(1...Int(numberOfRows + 1), id: \.self) { i in
+                ForEach(1...numberOfRows, id: \.self) { i in
                     HStack(spacing: spacing) {
                         ForEach(1...numberOfColumns, id: \.self) { j in
                             let cellCoordinates = CGPoint(
@@ -76,10 +80,12 @@ public struct RippleMetricView: View {
                             let originDistanceNormalize = originDistance / MAX_GRID_DISTANCE
                             let waveImpact = pow(1.0 - originDistanceNormalize, 0)
                             
-                            Text("♥️")
+//                            Text("♥️")
 //                            Image(systemName: "square.and.arrow.up")
 //                            Circle()
 //                                .fill(Color.blue)
+                            RoundedRectangle(cornerRadius: itemSize/4)
+                                .fill(.tint)
                                 .frame(width: abs(itemSize), height: abs(itemSize))
                                 .phaseAnimator(
                                     CellAnimationPhase.allCases,
@@ -103,6 +109,11 @@ public struct RippleMetricView: View {
                     }
                 }
             }
+            .preference(key: ItemHeightPreferenceKey.self, value: totalHeight)
+        }
+        .frame(height: height)
+        .onPreferenceChange(ItemHeightPreferenceKey.self) { value in
+            height = value
         }
     }
 }
